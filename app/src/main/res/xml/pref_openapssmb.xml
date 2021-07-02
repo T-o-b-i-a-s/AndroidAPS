@@ -34,6 +34,11 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="openapsama_useautoisf"
+            android:title="@string/openapsama_useautoisf" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="@string/key_use_smb"
             android:summary="@string/enablesmb_summary"
             android:title="@string/enablesmb" />
@@ -201,6 +206,34 @@
                 android:singleLine="true"
                 android:title="@string/openapsama_current_basal_safety_multiplier"
                 validate:floatmaxNumber="10"
+                validate:floatminNumber="1"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="0.5"
+                android:dialogMessage="@string/openapsama_smb_delivery_ratio_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_smb_delivery_ratio"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_smb_delivery_ratio"
+                validate:floatmaxNumber="1"
+                validate:floatminNumber="0.1"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="1"
+                android:dialogMessage="@string/openapsama_smb_max_range_extension_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_smb_max_range_extension"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_smb_max_range_extension"
+                validate:floatmaxNumber="5"
                 validate:floatminNumber="1"
                 validate:testType="floatNumericRange" />
 

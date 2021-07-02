@@ -248,6 +248,9 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("sens", profile.getIsfMgdl());
         mProfile.put("max_daily_safety_multiplier", sp.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
         mProfile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
+        // mod 10: include SMB manipulations to be accessible in determine-basal
+        mProfile.put("smb_delivery_ratio", sp.getDouble(R.string.key_openapsama_smb_delivery_ratio, 4d));
+        mProfile.put("smb_max_range_extension", sp.getDouble(R.string.key_openapsama_smb_max_range_extension, 4d));
 
         //mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
         mProfile.put("high_temptarget_raises_sensitivity", false);
@@ -288,6 +291,11 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")));
+        // mod 7e: can I add use autoisf here?
+        mProfile.put("use_autoisf", sp.getBoolean(R.string.key_openapsama_useautoisf, false));
+        // mod 7d: can I add autosens_min here?
+        mProfile.put("autoisf_max",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autoisf_max, "1.2")));
+        mProfile.put("autoisf_hourlychange",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autoisf_hourlychange, "0.2")));
 
         if (profileFunction.getUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
@@ -322,7 +330,9 @@ public class DetermineBasalAdapterSMBJS {
         mGlucoseStatus.put("short_avgdelta", glucoseStatus.short_avgdelta);
         mGlucoseStatus.put("long_avgdelta", glucoseStatus.long_avgdelta);
         mGlucoseStatus.put("date", glucoseStatus.date);
-
+        // mod 7: append 2 variables for 5% range
+        mGlucoseStatus.put("autoISF_duration", glucoseStatus.autoISF_duration);
+        mGlucoseStatus.put("autoISF_average", glucoseStatus.autoISF_average);
         mMealData = new JSONObject();
         mMealData.put("carbs", mealData.carbs);
         mMealData.put("boluses", mealData.boluses);

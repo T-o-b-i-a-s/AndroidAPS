@@ -8,7 +8,7 @@
         android:title="@string/absorptionsettings_title"
         app:initialExpandedChildrenCount="0">
 
-    <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="8.0"
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
             android:inputType="numberDecimal"
@@ -63,6 +63,34 @@
                 android:title="@string/openapsama_autosens_min"
                 validate:floatmaxNumber="1.0"
                 validate:floatminNumber="0.1"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="1.2"
+                android:dialogMessage="@string/openapsama_autoisf_max_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autoisf_max"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autoisf_max"
+                validate:floatmaxNumber="3"
+                validate:floatminNumber="1"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="0.2"
+                android:dialogMessage="@string/openapsama_autoisf_hourlychange_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autoisf_hourlychange"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autoisf_hourlychange"
+                validate:floatmaxNumber="3"
+                validate:floatminNumber="0"
                 validate:testType="floatNumericRange" />
 
         </androidx.preference.PreferenceScreen>

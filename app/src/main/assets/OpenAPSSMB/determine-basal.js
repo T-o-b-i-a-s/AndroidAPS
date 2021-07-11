@@ -114,35 +114,58 @@ function autoISF(sens, target_bg, profile, glucose_status, meal_data, autosens_d
         console.error("autoISF disabled in Preferences");
         return sens;
     }
-    // #### mod 7:  dynamic ISF strengthening based on duration and width of 5% BG band
+    // #### mod 7:  dynamic ISF strengthening based on duration and width of +/-5% BG band
     // #### mod 7b: misuse autosens_min to get the scale factor
     // #### mod 7d: use standalone variables for autopISF
+    // #### mod 7e: enable autopISF via menu
+    // #### mod 7f: enable autopISF_with_COB via menu
     var dura05 = glucose_status.autoISF_duration;           // mod 7d
     var avg05  = glucose_status.autoISF_average;            // mod 7d
     //r weightISF = (1 - profile.autosens_min)*2;           // mod 7b: use 0.6 to get factor 0.8; use 1 to get factor 0, i.e. OFF
     var weightISF = profile.autoisf_hourlychange;           // mod 7d: specify factor directly; use factor 0 to shut autoISF OFF
-    if (meal_data.mealCOB==0 && dura05>=10) {
-        if (avg05 > target_bg) {
-            // # fight the resistance at high levels
-            var maxISFReduction = profile.autoisf_max;      // mod 7d
-            var dura05_weight = dura05 / 60;
-            var avg05_weight = weightISF / target_bg;       // mod gz7b: provide access from AAPS
-            var levelISF = 1 + dura05_weight*avg05_weight*(avg05-target_bg);
-            var liftISF = Math.max(Math.min(maxISFReduction, levelISF), sensitivityRatio);  // corrected logic on 30.Jan.2021
-            console.error("autoISF reports", sens, "did not do it for", dura05,"m; go more aggressive by", round(levelISF,2));
-            if (maxISFReduction < levelISF) {
-                console.error("autoISF reduction", round(levelISF,2), "limited by autoisf_max", maxISFReduction);
-            }
-            sens = round(profile.sens / liftISF, 1);
-        } else {
-            console.error("autoISF by-passed; avg. glucose", avg05, "below target", target_bg);
-        }
-    } else if (meal_data.mealCOB>0) {
-        console.error("autoISF by-passed; mealCOB of "+round(meal_data.mealCOB,1));
-    } else {
+    if (meal_data.mealCOB>0 && !profile.enableautoisf_with_COB) {
+        console.error("autoISF by-passed; preferences disabled mealCOB of "+round(meal_data.mealCOB,1));    // mod 7f
+    } else if (dura05<10) {
         console.error("autoISF by-passed; BG is only "+dura05+"m at level "+avg05);
+    } else if (avg05 <= target_bg) {
+        console.error("autoISF by-passed; avg. glucose", avg05, "within target", target_bg);
+    } else {
+        // # fight the resistance at high levels
+        var maxISFReduction = profile.autoisf_max;                                      // mod 7d
+        var dura05_weight = dura05 / 60;
+        var avg05_weight = weightISF / target_bg;                                       // mod gz7b: provide access from AAPS
+        var levelISF = 1 + dura05_weight*avg05_weight*(avg05-target_bg);
+        var liftISF = Math.max(Math.min(maxISFReduction, levelISF), sensitivityRatio);  // corrected logic on 30.Jan.2021
+        console.error("autoISF reports ISF", sens, "did not do it for", dura05,"m; go more aggressive by", round(levelISF,2));
+        if (maxISFReduction < levelISF) {
+            console.error("autoISF reduction", round(levelISF,2), "limited by autoisf_max", maxISFReduction);
+        }
+        sens = round(profile.sens / liftISF, 1);
     }
     return sens;
+}
+
+function determine_varSMBratio(profile, bg, target_bg)
+{   // mod 12: let SMB delivery ratio increase f#rom min to max depending on how much bg exceeds target
+    if ( typeof profile.smb_delivery_ratio_bg_range === 'undefined' || profile.smb_delivery_ratio_bg_range === 0 ) {
+        // not yet upgraded to this version or deactivated in SMB extended menu
+        console.error('SMB delivery ratio set to fixed value', profile.smb_delivery_ratio);
+        return profile.smb_delivery_ratio;
+    }
+    var lower_SMB = Math.min(profile.smb_delivery_ratio_min, profile.smb_delivery_ratio_max);
+    if (bg <= target_bg) {
+        console.error('SMB delivery ratio limited by minimum value', lower_SMB);
+        return lower_SMB;
+    }
+    var higher_SMB = Math.max(profile.smb_delivery_ratio_min, profile.smb_delivery_ratio_max);
+    var higher_bg = target_bg + profile.smb_delivery_ratio_bg_range;
+    if (bg >= higher_bg) {
+        console.error('SMB delivery ratio limited by maximum value', higher_SMB);
+        return higher_SMB;
+    }
+    var new_SMB = lower_SMB + (higher_SMB - lower_SMB)*(bg-target_bg) / profile.smb_delivery_ratio_bg_range;
+    console.error('SMB delivery ratio set to interpolated value', new_SMB);
+    return new_SMB;
 }
 
 var determine_basal = function determine_basal(glucose_status, currenttemp, iob_data, profile, autosens_data, meal_data, tempBasalFunctions, microBolusAllowed, reservoir_data, currentTime, isSaveCgmSource) {
@@ -1114,11 +1137,20 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             // bolus 1/2 the insulinReq, up to maxBolus, rounding down to nearest bolus increment
             var roundSMBTo = 1 / profile.bolus_increment;
             // mod 10: make the share of InsulinReq a user input
-            var smb_ratio = profile.smb_delivery_ratio
-            //if ( smb_ratio > 0.5) {
-            //    console.error("SMB ratio increased from default 0.5 to", smb_ratio)
-            //}
-            var microBolus = Math.floor(Math.min(insulinReq*smb_ratio, maxBolus)*roundSMBTo)/roundSMBTo;
+            // mod 12: make the share of InsulinReq a user configurable interpolation range
+            var smb_ratio = determine_varSMBratio(profile, bg, target_bg);
+            var microBolus = Math.min(insulinReq*smb_ratio, maxBolus);
+            if (bg < max_bg+10) {
+                var lessSMBRatio =                   2*(1 - bg/(max_bg+10));
+                //console.error("gz debug lessSMBRatio", lessSMBRatio);
+                lessSMBRatio     =       Math.min(1, lessSMBRatio          );
+                //console.error("gz debug lessSMBRatio", lessSMBRatio);
+                lessSMBRatio     = round(lessSMBRatio                       , 2);
+                //r lessSMBRatio = round(Math.min(1, 2*(1 - bg/(max_bg+10))), 2);
+                microBolus = microBolus * (1-lessSMBRatio);
+                console.error("gz SMB reduced by " + 100*lessSMBRatio + "% because bg("+bg+") is below upper target("+max_bg+")+10");
+            }
+            microBolus = Math.floor(microBolus*roundSMBTo)/roundSMBTo;
             // calculate a long enough zero temp to eventually correct back up to target
             var smbTarget = target_bg;
             worstCaseInsulinReq = (smbTarget - (naive_eventualBG + minIOBPredBG)/2 ) / sens;

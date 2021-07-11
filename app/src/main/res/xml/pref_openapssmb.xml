@@ -39,6 +39,12 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="@string/enableautoISFwithcob"
+            android:summary="@string/enableautoISFwithcob_summary"
+            android:title="@string/enableautoISFwithcob" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="@string/key_use_smb"
             android:summary="@string/enablesmb_summary"
             android:title="@string/enablesmb" />
@@ -221,6 +227,48 @@
                 android:title="@string/openapsama_smb_delivery_ratio"
                 validate:floatmaxNumber="1"
                 validate:floatminNumber="0.1"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="0.5"
+                android:dialogMessage="@string/openapsama_smb_delivery_ratio_min_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_smb_delivery_ratio_min"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_smb_delivery_ratio_min"
+                validate:floatmaxNumber="1"
+                validate:floatminNumber="0.5"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="0.9"
+                android:dialogMessage="@string/openapsama_smb_delivery_ratio_max_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_smb_delivery_ratio_max"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_smb_delivery_ratio_max"
+                validate:floatmaxNumber="1"
+                validate:floatminNumber="0.5"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="0"
+                android:dialogMessage="@string/openapsama_smb_delivery_ratio_bg_range_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_smb_delivery_ratio_bg_range"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_smb_delivery_ratio_bg_range"
+                validate:floatmaxNumber="100"
+                validate:floatminNumber="0"
                 validate:testType="floatNumericRange" />
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference

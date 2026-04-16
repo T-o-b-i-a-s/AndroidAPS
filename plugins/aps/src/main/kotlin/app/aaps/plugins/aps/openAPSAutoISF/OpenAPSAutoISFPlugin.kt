@@ -1,3 +1,7 @@
+// kbountro: Changes: 
+// 1. New interpolate polygon.
+// 2. dura_ISF is multiplied universally with pp and accel weights
+
 package app.aaps.plugins.aps.openAPSAutoISF
 
 import android.content.Context
@@ -915,11 +919,17 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         }
         autoIsfValues.duraIsf = dura_ISF
 
+        // kbountro: dura_ISF is now multiplied universally with other weights
         if (sens_modified) {
-            liftISF = max(dura_ISF, max(bg_ISF, max(acce_ISF, pp_ISF)))
+            //liftISF = max(dura_ISF, max(bg_ISF, max(acce_ISF, pp_ISF)))
+            liftISF = max(bg_ISF, max(acce_ISF, pp_ISF))
             if (acce_ISF < 1.0) {
                 consoleError.add("strongest autoISF factor ${round(liftISF, 2)} weakened to ${round(liftISF * acce_ISF, 2)} as bg decelerates already")
                 liftISF = liftISF * acce_ISF
+            }
+            if (dura_ISF > 1.0) {
+                consoleError.add("autoISF factor ${round(liftISF, 2)} lifted to ${round(liftISF * dura_ISF, 2)} to fight resistance")
+                liftISF = liftISF * dura_ISF
             }
             final_ISF = withinISFlimits(liftISF, autoISF_min, maxISFReduction, sensitivityRatio, exerciseModeActive, resistanceModeActive, stepActivityDetected, stepInactivityDetected)
             return round(sens / final_ISF, 1)
@@ -930,10 +940,14 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return round(sens / sensitivityRatio, 1)     // nothing changed
     }
 
+    // kbountro: Changed polygon according to https://journals.sagepub.com/doi/pdf/10.1177/193229681000400416
+    // kbountro: Guessed extrapolation of the above study from 200mg/dl to 300mg/dl, 10% -> 20% insulin effectiveness
     fun interpolate(xdata: Double): Double {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
         //  ...             <----------------------  glucose  ---------------------->
-        val polyX = arrayOf(50.0, 60.0, 80.0, 90.0, 100.0, 110.0, 150.0, 180.0, 200.0)
-        val polyY = arrayOf(-0.5, -0.5, -0.3, -0.2, 0.0, 0.0, 0.5, 0.7, 0.7)
+        //val polyX = arrayOf(50.0, 60.0, 80.0, 90.0, 100.0, 110.0, 150.0, 180.0, 200.0)
+        //val polyY = arrayOf(-0.5, -0.5, -0.3, -0.2, 0.0, 0.0, 0.5, 0.7, 0.7)
+        val polyX = arrayOf(50.0, 60.0, 70.0, 80.0, 90.0, 150.0, 200.0, 300.0)
+        val polyY = arrayOf(-0.57, -0.28, -0.16, -0.06, 0.0, 0.0, 0.11, 0.25)
         val polymax: Int = polyX.size - 1
         var step = polyX[0]
         var sVal = polyY[0]

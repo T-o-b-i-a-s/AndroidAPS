@@ -139,7 +139,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     override var lastAPSResult: APSResult? = null
     private var consoleError = mutableListOf<String>()
     private var consoleLog = mutableListOf<String>()
-    val autoIsfVersion = "3.2.0"
+    val autoIsfVersion = "3.2.1"
     val autoIsfWeights; get() = preferences.get(BooleanKey.ApsUseAutoIsfWeights)
     private val autoISF_max; get() = preferences.get(DoubleKey.ApsAutoIsfMax)
     private val autoISF_min; get() = preferences.get(DoubleKey.ApsAutoIsfMin)

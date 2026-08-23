@@ -6,14 +6,15 @@
 
 ## What is autoISF?
 AutoISF adds more power to the algorithm used in AndroidAPS by adjusting the insulin sensitivity
-based on different scenarios (e.g. high BG, accelerating/decelerating BG, BG plateau). 
+based on different scenarios (e.g. high BG, accelerating/decelerating BG, BG plateau).
 autoISF has many different settings to fine-tune these adjustments.
-However, it is important to start with well-tested basal rate and settings for insulin sensitivity 
+However, it is important to start with well-tested basal rate and settings for insulin sensitivity
 and carb ratios.
 
 ## Where to find documentation about autoISF
-* Please visit ga-zelle’s repository [GitHub - ga-zelle/autoISF](https://github.com/ga-zelle/autoISF/tree/A3.3.3.a%2Baisf3.1.0).
-* The [**Quick Guide (bzw. Kurzanleitung)**](https://github.com/ga-zelle/autoISF/blob/A3.3.3.a%2Baisf3.1.0/autoISF3.1.0_Quick_Guide.pdf) provides an overview of autoISF and its features
+* Please visit ga-zelle’s repository [GitHub - ga-zelle/autoISF](https://github.com/ga-zelle/autoISF/tree/A3.4.2.6_ai3.2.1).
+* This repo contains a [ReadMe document](https://github.com/ga-zelle/autoISF/blob/A3.4.2.6_ai3.2.1/README.md) with a description of the latest changes to AutoISF
+* The [**Quick Guide (bzw. Kurzanleitung)**](https://github.com/68d23e02-a816-45de-83ad-d5483ef5e351) provides an overview of autoISF and its features
 
 
 ## Why do I get AutoISF here and not at ga-zelle's Repo?
@@ -23,74 +24,65 @@ and carb ratios.
   [BerNie](https://github.com/bherpichb), [mountrcg](https://github.com/mountrcg),
   [Bjr](https://github.com/blaqone), [Gohtraw](https://github.com/Gohtraw),
   [Koelewij](https://github.com/koelewij) and [myself](https://github.com/T-o-b-i-a-s).
-* This repository here was created to provide a stable version of AndroidAPS with the current 
+* This repository here was created to provide a stable version of AndroidAPS with the current
   autoISF extensions already integrated to simplify the build process.
-* This branch https://github.com/T-o-b-i-a-s/AndroidAPS/tree/3.4.0.0+aisf3.2.0 uses
-  [AndroidAPS 3.4.0.0](https://github.com/nightscout/AndroidAPS/releases/tag/3.4.0.0)
+* This branch https://github.com/T-o-b-i-a-s/AndroidAPS/tree/3.4.2.6+aisf3.2.1 uses
+  [AndroidAPS 3.4.2.6](https://github.com/nightscout/AndroidAPS/releases/tag/3.4.2.6)
   from the official [Nightscout AndroidAPS](https://github.com/nightscout/AndroidAPS)
-  repo as a base and adds autoISF 3.2.0 to it.
+  repo as a base and adds autoISF 3.2.1 to it.
 
-## What's new in autoISF Version 3.2.0 when compared to AutoISF 3.1.0
-* Allows to plot the fitted parabola on the main screen in the main graph
-  to visualize it and compare it against the other predictions
-* Allows to plot the autoISF factors on the main screen in the subgraphs
-  to visualize it and compare their individual contributions
-* Allows to plot the effective IobTH on the main screen in a subgraph
-  and visualize it and compare it against IOB and COB
-* In the AAPS Client allow to show the script debug from the main app
-  to understand what happend in the last loop and the reasons
-
-## Why was autoISF not added to the current AndroidAPS "master" version 3.4.0.0?
+## Why was autoISF not part of the official AndroidAPS "master" version?
 * With AndroidAPS 3.3, autoISF was introduced as a plugin, but can only be enabled in dev mode
-* The version available here makes the latest 3.2.0 version of autoISF available even without 
-  dev mode
+* The version available here makes the latest 3.2.1 version of autoISF available in the currently  
+  latest 2.4.2.6vAndroidAPS version even without dev mode
 
 # Building
 ## How to build this branch within the Browser (Github Actions)
-1. Sign in to Github, or [create a new Github Account](https://github.com/signup) if you do not 
-   have one yet  
+1. Sign in to Github, or [create a new Github Account](https://github.com/signup) if you do not
+   have one yet
 2. Create a fork of this repo in your own account by pressing the "Fork" button. When asked, click
-   the checkbox to "Copy the `3.4.0.0+aisf3.2.0` branch only".   
-   If you get the error message "No available destinations to fork this repository.", 
-   you probably already have a fork of AndroidAPS. Github does not allow two forks of the same 
-   base repository. You now have two options: 
-   * __Simple__: If you do not know how to use the `git` command line tool and forking this repo does not
-     work, you can create a clone of a [forkable copy of this repo](https://github.com/T-o-b-i-a-s/AndroidAPS-autoisf-clonable), 
-     however you will then need to create your Github repository secrets again for this repo to be 
-     able to use the browser build.
-   * __Advanced__: If you are familiar with the `git` command line tool on your PC, you can use it to add this
-     repository as a second remote, checkout this branch locally and push it to your already
-     existing AndroidAPS repository. This will allow to reuse any existing Github repository secrets
-     already created for using the browser build functionality for the official AndroidAPS version.
-3. If you have never used the browser build before or you have used the forkable copy to create 
-   your fork, now follow the [preparation steps](https://androidaps.readthedocs.io/de/latest/SettingUpAaps/BrowserBuild.html#preparation-steps) 
-   to create secrets within your forked autoisf Repository. Make sure the secrets are created within 
+   the checkbox to "Copy the `3.4.2.6+aisf3.2.1` branch only".
+   If you get the error message "No available destinations to fork this repository.",
+   you probably already have a fork of AndroidAPS. Github does not allow two forks of the same
+   base repository. You now have two options:
+    * __Simple__: If you do not know how to use the `git` command line tool and forking this repo does not
+      work, you can create a clone of a [forkable copy of this repo](https://github.com/T-o-b-i-a-s/AndroidAPS-autoisf-clonable),
+      however you will then need to create your Github repository secrets again for this repo to be
+      able to use the browser build.
+    * __Advanced__: If you are familiar with the `git` command line tool on your PC, you can use it to add this
+      repository as a second remote, checkout this branch locally and push it to your already
+      existing AndroidAPS repository. This will allow to reuse any existing Github repository secrets
+      already created for using the browser build functionality for the official AndroidAPS version.
+3. If you have never used the browser build before or you have used the forkable copy to create
+   your fork, now follow the [preparation steps](https://androidaps.readthedocs.io/de/latest/SettingUpAaps/BrowserBuild.html#preparation-steps)
+   to create secrets within your forked autoisf Repository. Make sure the secrets are created within
    the repository that contains this autoisf branch. This is a one time step to setup the browser
-   build and can be skipped if you already did it earlier. 
-4. Now start the browser build using the Github Action 
-   [aaps-ci](https://androidaps.readthedocs.io/de/latest/SettingUpAaps/BrowserBuild.html#aaps-ci-github-actions-to-build-the-aaps-apk). 
+   build and can be skipped if you already did it earlier.
+4. Now start the browser build using the Github Action
+   [aaps-ci](https://androidaps.readthedocs.io/de/latest/SettingUpAaps/BrowserBuild.html#aaps-ci-github-actions-to-build-the-aaps-apk).
    At the moment when the description asks you to select the "master" branch, make sure to
-   select this branch "3.4.0.0+aisf3.2.0" when setting the parameters to really create AndroidAPS
+   select this branch "3.4.2.6+aisf3.2.1" when setting the parameters to really create AndroidAPS
    with autoISF included.
 5. After the build is completed, you can download the APK from your Google Drive that was used when
-   setting up the Github repository secrets in step 3 
+   setting up the Github repository secrets in step 3
 
 ## How to build this branch in Android Studio
 1. Get the latest version of Android Studio
 2. Close any currently open projects in Android Studio
 3. Create a new project by using the "Get from VCS" button to tell it to retrieve the source from a
    remote version control system
-4. Use the url of this repository as a source (https://github.com/T-o-b-i-a-s/AndroidAPS.git). 
-   Do **NOT** append any branch name or version number or other path, **just use the URL as 
-   listed above**!
-5. Now wait until Android has completed any initialization activities. As always deny any requests to upgrade Gradle. A "Gradle sync" might however be necessary.
+4. Use the url of this repository as a source (https://github.com/T-o-b-i-a-s/AndroidAPS.git).
+   Do **NOT** append any branch name or version number or other path, **just use the URL as
+   shown above**!
+5. Now wait until Android has completed any initialization activities. As always deny any requests 
+   to upgrade Gradle. A "Gradle sync" might however be necessary.
 6. Android Studio now shows the name of the current branch on the upper left within the title bar.
-  * This will often be `master`, which contains a version of AndroidAPS without autoISF, 
-    do **not** use the `master` branch
-  * If it is not already selected, switch to the branch you want to build by clicking on the branch
-    name, choosing "show more" under "Remote branches" and look for the name of
-    the branch with an "origin/" prefix: e.g. `origin/3.4.0.0+aisf3.2.0`. Left-click that name and
-    select "Checkout". 
+* This will often be `master`, which contains a version of AndroidAPS without autoISF,
+  do **not** use the `master` branch
+* If it is not already selected, switch to the branch you want to build by clicking on the branch
+  name, choosing "show more" under "Remote branches" and look for the name of
+  the branch with an "origin/" prefix: e.g. `origin/3.4.2.6+aisf3.2.1`. Left-click that name and
+  select "Checkout".
 7. The system will now create a local branch with the same name as the remote branch and switch to that branch, which is indicated by the name of
    the branch being shown in the upper right corner
 8. You can now build the APK with Build -> Generate signed Bundle / APK
@@ -103,9 +95,9 @@ and carb ratios.
     this repo into a new directory on your computer (different than the one you have used before).
 
 ### What can I do if the build does not work?
-* Follow the instructions exactly as described. Carefully re-read all previous and the failing 
+* Follow the instructions exactly as described. Carefully re-read all previous and the failing
   step and try to start from scratch.
-* Make sure you used "https://github.com/T-o-b-i-a-s/AndroidAPS.git" as the URL to "Get from VCS" 
+* Make sure you used "https://github.com/T-o-b-i-a-s/AndroidAPS.git" as the URL to "Get from VCS"
   and none including the branch or version name
 * If you have problems understanding English and need a translation, consider using an automatic
   translation tool such as https://www.deepl.com where you have to copy and paste the english text
